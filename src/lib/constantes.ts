@@ -1,148 +1,146 @@
-export const team = [
+export const menuItems = [
   {
-    name: "Ahmed Benali",
-    role: "Directeur Général",
-    image: "/images/team1.jpg",
-    description: "15 ans d'expérience dans l'industrie automobile"
+    icon: "/icons/phone.png",
+    alt: "support",
+    label: "Support",
+    link: "/+212708015107",
   },
   {
-    name: "Fatima Zahra",
-    role: "Responsable Commercial",
-    image: "/images/team2.jpg",
-    description: "Spécialiste en service client et satisfaction"
+    icon: "/icons/user.png",
+    alt: "connexion",
+    label: "Connexion",
+    link: "/auth/login",
   },
   {
-    name: "Youssef Alami",
-    role: "Responsable Technique",
-    image: "/images/team3.jpg",
-    description: "Expert en maintenance et sécurité automobile"
-  }
+    icon: "/icons/panier.png",
+    alt: "panier",
+    label: "Panier",
+    link: "/panier",
+  },
 ];
-
-
-export const Navlinks = [
-  { href: "/", label: "Accueil" },
-  { href: "/catalogue", label: "Catalogue" },
-  { href: "/About", label: "À propos" },
-  { href: "/contact", label: "Contact" },
-  { href: "/admin/add", label: "Gestion" },
-];
-
-export const Categories = [
-  { link: "#",icon:"/images/phone.png", title: "Phone" },
-  { link: "#",icon:"/images/airpod.png", title: "Accessoire" },
-  { link: "#",icon:"/images/macbook.png", title: "MacBook" },
-  { link: "#",icon:"/images/vision.png", title: "Vision Pro" },
-  { link: "#",icon:"/images/phone.png", title: "Phone" },
-  { link: "#",icon:"/images/airpod.png", title: "Accessoire" },
-  { link: "#",icon:"/images/macbook.png", title: "MacBook" },
-  { link: "#",icon:"/images/vision.png", title: "Vision Pro" },
-]
-
-
-export const Product = {
-  name: "iPhone 11 Pro ",
-  brand: "Apple",
-  price: 11000,                       // Use number instead of string for easier calculations
-  condition: "neuf",                  // You can keep 'etat' if you prefer French
-  storageOptions: [128, 256, 512],   // Fixed typo from 'stockge' to 'storageOptions'
-  description: "The iPhone 11 Pro Max features a triple-camera system, Super Retina XDR display, and long-lasting battery life.",
-  category: "Smartphones",
-  colors: ["Space Gray", "Silver", "Gold", "Midnight Green"],
-  image: "/images/iphone11.jpg",
-  solde: true,
-  bestSeller:true
+interface MenuItem {
+  image: string;
+  name: string;
+  hasDropdown: boolean;
 }
 
-export const Products = [
-  {
-    id: "p001",
-    name: "iPhone 11 Pro",
-    brand: "Apple",
-    price: 11000,
-    oldprice:14000,
-    condition: "neuf",
-    storageOptions: [128, 256, 512],
-    description: "The iPhone 11 Pro features a triple-camera system, Super Retina XDR display, and long-lasting battery life.",
-    category: "Smartphones",
-    colors: ["Space Gray", "Silver", "Gold", "Midnight Green"],
-    image: "/images/iphone11.jpg",
-    solde: true,
-    bestSeller: true
+interface MenuColumn {
+  title: string;
+  items: string[];
+}
+
+interface MenuCategory {
+  columns: MenuColumn[];
+}
+
+interface MenuData {
+  [key: string]: MenuCategory;
+}
+
+export const topMenuItems: MenuItem[] = [
+  { image:'', name: 'Configurateur PC', hasDropdown: false },
+  { image:'', name: 'Composants', hasDropdown: true },
+  { image:'', name: 'PC Gamer', hasDropdown: true },
+  { image:'', name: 'Setup Complet', hasDropdown: false },
+  { image:'', name: 'PC Portable', hasDropdown: true },
+  { image:'', name: 'Périphériques', hasDropdown: true },
+  { image:'', name: 'Image & Son', hasDropdown: true },
+  { image:'', name: 'Consoles', hasDropdown: true },
+  { image:'', name: 'Chaise & Bureau', hasDropdown: true }
+];
+
+export const menuData: MenuData = {
+  'PC Gamer': {
+    columns: [
+      {
+        title: 'PC Gamer INTEL',
+        items: ['Intel Core Ultra 9', 'Intel Core Ultra 7', 'Intel Core Ultra 5', 'Intel Core i9', 'Intel Core i7', 'Intel Core i5', 'Intel Core i3']
+      },
+      {
+        title: 'PC Gamer AMD',
+        items: ['Ryzen 9', 'Ryzen 7', 'Ryzen 5', 'Ryzen 3']
+      }
+    ]
   },
-  {
-    id: "p002",
-    name: "iPhone 12 Pro",
-    brand: "Apple",
-    price: 13000,
-    oldprice:14000,
-    condition: "neuf",
-    storageOptions: [64, 128, 256],
-    description: "The iPhone 12 features 5G support, OLED display, and a dual-camera system.",
-    category: "Smartphones",
-    colors: ["Black", "White", "Red", "Blue", "Green"],
-    image: "/images/iphne12.png",
-    solde: false,
-    bestSeller: true
+  'Composants': {
+    columns: [
+      {
+        title: 'Processeur',
+        items: ['Processeur Intel', 'Processeur AMD']
+      },
+      {
+        title: 'Carte mère',
+        items: ['Socket Intel', 'Socket AMD']
+      },
+      {
+        title: 'Refroidissement',
+        items: ['Watercooling', 'Refroidissement Processeur', 'Ventilateur Boitier', 'Pâte thermique']
+      },
+      {
+        title: 'Carte graphique',
+        items: ['GPU NVIDIA', 'GPU AMD', 'GPU INTEL']
+      },
+      {
+        title: 'Mémoire vive',
+        items: ['RAM DDR4', 'RAM DDR5', 'RAM pour PC Portable']
+      },
+      {
+        title: 'STOCKAGE',
+        items: ['Disque SSD', 'Disque HDD', 'Disque dur externe', 'Clé USB']
+      },
+      {
+        title: 'Alimentation PC',
+        items: ['Moins de 500 W', 'Entre 500 W et 599 W', 'Entre 600 W et 699 W', 'Entre 700 W et 799 W', 'Entre 800 W et 899 W', 'Plus de 900 W']
+      },
+      {
+        title: 'Boitier PC',
+        items: ['Les Grandes Tours', 'Les Moyennes Tours', 'Les Minis Boitiers']
+      },
+      {
+        title: 'Carte son',
+        items: []
+      }
+    ]
   },
-  {
-    id: "p003",
-    name: "iPhone 13 Pro",
-    brand: "Apple",
-    price: 15000,
-    oldprice:14000,
-    condition: "neuf",
-    storageOptions: [128, 256, 512, 1024],
-    description: "iPhone 13 Pro comes with ProMotion display, A15 Bionic chip, and advanced camera system.",
-    category: "Smartphones",
-    colors: ["Graphite", "Gold", "Silver", "Sierra Blue"],
-    image: "/images/iphone13pro.jpg",
-    solde: true,
-    bestSeller: false
+  'PC Portable': {
+    columns: [
+      {
+        title: '',
+        items: ['PC Portable Gamer', 'PC Portable Multimédia', 'Sac ordinateur portable', 'Ventilateur PC portable', 'Chargeur PC portable']
+      }
+    ]
   },
-  {
-    id: "p001",
-    name: "iPhone 11 Pro",
-    brand: "Apple",
-    price: 11000,
-    oldprice:14000,
-    condition: "neuf",
-    storageOptions: [128, 256, 512],
-    description: "The iPhone 11 Pro features a triple-camera system, Super Retina XDR display, and long-lasting battery life.",
-    category: "Smartphones",
-    colors: ["Space Gray", "Silver", "Gold", "Midnight Green"],
-    image: "/images/iphone11.jpg",
-    solde: true,
-    bestSeller: true
+  'Périphériques': {
+    columns: [
+      {
+        title: '',
+        items: ['Clavier', 'Souris', 'Tapis de souris', 'Pack Claviers/Souris', 'Accessoires streaming', 'Manettes', 'Volant PC']
+      }
+    ]
   },
-  {
-    id: "p002",
-    name: "iPhone 12 Pro",
-    brand: "Apple",
-    price: 13000,
-    oldprice:14000,
-    condition: "neuf",
-    storageOptions: [64, 128, 256],
-    description: "The iPhone 12 features 5G support, OLED display, and a dual-camera system.",
-    category: "Smartphones",
-    colors: ["Black", "White", "Red", "Blue", "Green"],
-    image: "/images/iphne12.png",
-    solde: false,
-    bestSeller: true
+  'Image & Son': {
+    columns: [
+      {
+        title: '',
+        items: ['Ecran', 'Bras & Pied', 'Casque', 'Microphone', 'Enceinte PC', 'Webcam']
+      }
+    ]
   },
-  {
-    id: "p003",
-    name: "iPhone 13 Pro",
-    brand: "Apple",
-    price: 15000,
-    oldprice:14000,
-    condition: "neuf",
-    storageOptions: [128, 256, 512, 1024],
-    description: "iPhone 13 Pro comes with ProMotion display, A15 Bionic chip, and advanced camera system.",
-    category: "Smartphones",
-    colors: ["Graphite", "Gold", "Silver", "Sierra Blue"],
-    image: "/images/iphone13pro.jpg",
-    solde: true,
-    bestSeller: false
+  'Consoles': {
+    columns: [
+      {
+        title: '',
+        items: ['Console PS5', 'Console Xbox Series', 'Console Nintendo Switch', 'Accessoires PS5']
+      }
+    ]
+  },
+  'Chaise & Bureau': {
+    columns: [
+      {
+        title: '',
+        items: ['Chaise Gamer', 'Chaise Ergonomique', 'Bureau Gaming', 'Tapis De Sol Gamer']
+      }
+    ]
   }
-]
+};
+

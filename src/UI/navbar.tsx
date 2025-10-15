@@ -1,213 +1,134 @@
 "use client";
-import React from "react";
+
+import Image from "next/image";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {menuItems} from "@/lib/constantes"
 import Link from "next/link";
-import { useState } from "react";
-import { Navlinks } from "@/lib/constantes";
-import { useAuth } from "@/lib/hooks/useAuth";
-import { usePathname } from "next/navigation";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const { isAuthenticated, isLoading } = useAuth();
-  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Pages où la navbar ne doit pas être affichée
-  const hideNavbarPages = ["/auth/login", "/auth/register"];
-  const shouldHideNavbar = hideNavbarPages.includes(pathname);
 
-  // Calculer les liens à afficher AVANT les return conditionnels
-  const linksToRender = React.useMemo(
-    () => Navlinks.filter((l) => isAuthenticated || l.label !== "Gestion"),
-    [isAuthenticated]
-  );
 
-  // Debug temporaire
-  console.log(
-    "Navbar - isAuthenticated:",
-    isAuthenticated,
-    "isLoading:",
-    isLoading
-  );
-
-  // Si on doit cacher la navbar, ne rien afficher
-  if (shouldHideNavbar) {
-    return null;
-  }
-
-  // Si on charge encore l'état d'authentification, afficher une navbar basique
-  if (isLoading) {
-    return (
-      <div className="text-interface flex justify-between py-4 md:px-[80px] px-4 items-center relative">
-        <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-        <div className="flex gap-4">
-          <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-        </div>
-      </div>
-    );
-  }
-
-  const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-
-      // Déclencher l'événement de changement d'authentification
-      window.dispatchEvent(new CustomEvent("auth-changed"));
-
-      // Rediriger vers la page de connexion
-      window.location.href = "/auth/login";
-    } catch (error) {
-      console.error("Erreur lors de la déconnexion:", error);
-    }
+  const itemVariants = {
+    closed: { opacity: 0, x: -20 },
+    open: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.3,
+      },
+    }),
   };
+
   return (
-    <div className="text-interface flex justify-between py-4 md:px-[80px] px-4 items-center relative">
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        transition={{ duration: 0.2 }}
-        className="flex items-center gap-2"
-      >
-        <h2>LOGO</h2>
-      </motion.div>
-
-      <motion.button
-        className="sm:hidden block "
-        onClick={() => setOpen(!open)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        transition={{ duration: 0.2 }}
-      >
-        <motion.svg
-          width="32"
-          height="32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          animate={{ rotate: open ? 90 : 0 }}
-          transition={{ duration: 0.3 }}
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="border-b border-primary"
+    >
+      <div className="flex items-center justify-between py-2.5 px-4 md:px-16">
+        {/* Logo */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="text-xl font-bold text-primary cursor-pointer"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </motion.svg>
-      </motion.button>
+          LOGO
+        </motion.div>
 
-      <div className="md:flex hidden  items-center gap-4">
-        <motion.ul
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="flexCenter md:gap-[30px] md:flex hidden "
-        >
-          {linksToRender.map((link, index) => (
-            <motion.li
-              key={link.href}
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center justify-center gap-5">
+          {menuItems.map((item, index) => (
+            <motion.div
+              key={item.label}
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 + index * 0.1 }}
-              className="relative group cursor-pointer "
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
+              <Link
+                href={item.link}
+                className="flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Link
-                  href={link.href}
-                  className="hover:text-[#5937E0] transition-colors duration-300"
-                >
-                  {link.label}
-                </Link>
-              </motion.div>
-            </motion.li>
+                <Image src={item.icon} alt={item.alt} width={23} height={23} />
+                <p className="text-lg text-primary font-semibold">
+                  {item.label}
+                </p>
+              </Link>
+            </motion.div>
           ))}
-        </motion.ul>
+        </div>
 
-        {/* Bouton de déconnexion pour les utilisateurs connectés */}
-        {isAuthenticated && (
-          <motion.button
-            onClick={handleLogout}
-            className="hidden md:block bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition-colors duration-200"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+        {/* Mobile Menu Toggle */}
+        <motion.div
+          className="sm:hidden block "
+          onClick={() => setIsOpen(!isOpen)}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ duration: 0.2 }}
+        >
+          <motion.svg
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            animate={{ rotate: isOpen ? 90 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="text-primary"
           >
-            Déconnexion
-          </motion.button>
-        )}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </motion.svg>
+        </motion.div>
       </div>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
-        {open && (
-          <motion.ul
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="flex flex-col gap-6 bg-white absolute top-full left-0 w-full py-6 px-8 z-10 sm:hidden"
+        {isOpen && (
+          <motion.div
+            initial="closed"
+            animate="open"
+            exit="closed"
+            className="md:hidden overflow-hidden bg-white border-t border-orange-200"
           >
-            {linksToRender.map((link, index) => (
-              <motion.li
-                key={link.href}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ delay: index * 0.1 }}
-                className="relative group cursor-pointer"
-              >
+            <div className="flex flex-col py-4 px-4 gap-4">
+              {menuItems.map((item, index) => (
                 <motion.div
-                  whileHover={{ scale: 1.05, x: 10 }}
+                  key={item.label}
+                  custom={index}
+                  variants={itemVariants}
+                  initial="closed"
+                  animate="open"
+                  exit="closed"
                   whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-orange-50 transition-colors"
                 >
-                  <Link
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="hover:text-[#5937E0] transition-colors duration-300"
-                  >
-                    {link.label}
-                  </Link>
+                  <Image
+                    src={item.icon}
+                    alt={item.alt}
+                    width={23}
+                    height={23}
+                  />
+                  <p className="text-lg text-primary font-semibold">
+                    {item.label}
+                  </p>
                 </motion.div>
-              </motion.li>
-            ))}
-
-            {/* Bouton de déconnexion dans le menu mobile */}
-            {isAuthenticated && (
-              <motion.li
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ delay: linksToRender.length * 0.1 }}
-                className="relative group cursor-pointer"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.05, x: 10 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <button
-                    onClick={() => {
-                      setOpen(false);
-                      handleLogout();
-                    }}
-                    className="hover:text-red-500 transition-colors duration-300 text-left w-full"
-                  >
-                    Déconnexion
-                  </button>
-                </motion.div>
-              </motion.li>
-            )}
-          </motion.ul>
+              ))}
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.nav>
   );
 }

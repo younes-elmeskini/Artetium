@@ -1,47 +1,78 @@
 @import "tailwindcss";
+@layer theme, base, components, utilities;
 
+/* 🎨 Thème global */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
 }
 
 @theme {
-  /* Palette de couleurs */
-  --color-primary: #2563eb;
-  --color-primary-dark: #1e40af;
-  --color-secondary: #7c3aed;
-  --color-accent: #f59e0b;
-  --color-gray-50: #f9fafb;
-  --color-gray-900: #111827;
-  
-  /* Typography */
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-heading: "Inter", sans-serif;
-  
-  /* Spacing */
-  --spacing-section: 5rem;
-  --spacing-container: 2rem;
-  
-  /* Dimensions */
-  --width-container: 1280px;
-  --radius-button: 0.5rem;
-  --radius-card: 1rem;
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  /* 🌈 Couleurs principales */
+  --color-primary: #d92c01;
+  --color-secondary: #f69d0a;
+  --color-text: #1a1a1a;
+  --color-muted: #666666;
+
+  /* 🔠 Polices */
+  --font-display: "Satoshi", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* 📏 Breakpoints */
+  --breakpoint-3xl: 1920px;
+
+  /* 🧱 Espacements par défaut */
+  --spacing-xs: 0.5rem;  /* 8px */
+  --spacing-sm: 1rem;    /* 16px */
+  --spacing-md: 1.5rem;  /* 24px */
+  --spacing-lg: 2rem;    /* 32px */
+  --spacing-xl: 3rem;    /* 48px */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* 🧍‍♂️ Styles de base du body */
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
 }
+
+/* 🧩 Titres */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+/* 📝 Paragraphes et textes */
+
+/* 🔘 Boutons */
+/* button {
+  font-family: var(--font-display);
+  background-color: var(--color-primary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+} */
+
+/* button:hover {
+  background-color: var(--color-secondary);
+  transform: scale(1.03);
+} */
