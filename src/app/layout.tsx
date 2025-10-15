@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/UI/navbar";
 import PageTransition from "@/components/animations/PageTransition";
 import Footer from "@/UI/footer";
+import FilterHero from "@/UI/filterHero";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
+        <FilterHero/>
         <main className="min-h-screen">
           <PageTransition>{children}</PageTransition>
         </main>

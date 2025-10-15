@@ -55,8 +55,8 @@ export default function Navbar() {
                 href={item.link}
                 className="flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Image src={item.icon} alt={item.alt} width={23} height={23} />
-                <p className="text-lg text-primary font-semibold">
+                <Image src={item.icon} alt={item.alt} width={20} height={20} />
+                <p className="text-sm text-primary font-semibold">
                   {item.label}
                 </p>
               </Link>
