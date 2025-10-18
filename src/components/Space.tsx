@@ -4,7 +4,6 @@ import { products } from "@/lib/constantes";
 import Image from "next/image";
 import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
 
 type Space = {
   title: string;

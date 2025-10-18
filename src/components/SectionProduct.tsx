@@ -22,6 +22,11 @@ export default function SectionProduct() {
   };
   return (
     <div>
+      <div className="md:text-center text-start mx-5">
+        <h3 className="text-xl md:text-2xl font-semibold text-primary mb-3">
+          Collections Setup Complet
+        </h3>
+      </div>
       <div className="relative group mx-10">
         {/* Bouton Swipe Left */}
         <button

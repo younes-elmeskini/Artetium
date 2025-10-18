@@ -1,5 +1,4 @@
 import SectionCategories from "@/components/Categories";
-import SectionSpace from "@/components/Space";
 import SectionProduct from "@/components/SectionProduct";
 import SectionSpaces from "@/components/SectionSpaces";
 import HeroCarousel from "@/components/HeroSection";

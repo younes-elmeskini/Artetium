@@ -27,9 +27,9 @@ export default function HeroCarousel() {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
     }, 2000);
-
+  
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const goToPrevious = () => {
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
@@ -40,7 +40,7 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="relative h-96 w-full overflow-hidden md:mt-10">
+    <div className="relative h-96 w-full overflow-hidden md:mt-10 group">
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
@@ -77,21 +77,21 @@ export default function HeroCarousel() {
       {/* Boutons de navigation */}
       <button
         onClick={goToPrevious}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 text-primary p-3 rounded-full backdrop-blur-sm transition-all"
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white opacity-0 group-hover:opacity-100  text-primary p-3 rounded-full backdrop-blur-sm transition-all"
         aria-label="Slide précédent"
       >
         <ChevronLeft size={32} />
       </button>
       <button
         onClick={goToNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 text-primary p-3 rounded-full backdrop-blur-sm transition-all"
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white opacity-0 group-hover:opacity-100  text-primary p-3 rounded-full backdrop-blur-sm transition-all"
         aria-label="Slide suivant"
       >
         <ChevronRight size={32} />
       </button>
 
       {/* Indicateurs */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+      <div className="absolute md:bottom-8 bottom-4  left-1/2 -translate-x-1/2 flex gap-3">
         {slides.map((_, index) => (
           <button
             key={index}
