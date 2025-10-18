@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ChevronDown, Filter, X } from "lucide-react";
 import { topMenuItems, menuData } from "@/lib/constantes";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const MegaMenu: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -45,14 +46,14 @@ const MegaMenu: React.FC = () => {
                 }
                 onMouseLeave={() => setActiveMenu(null)}
               >
-                <button
+                <Link href={item.link ?? "#"} 
                   className={`px-4 py-4 text-gray-700 hover:text-cyan-500 font-medium flex text-sm items-center gap-1 transition-colors ${
                     activeMenu === item.name ? "text-cyan-500" : ""
                   }`}
                 >
                   {item.name}
                   {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
-                </button>
+                </Link>
 
                 {/* Mega Menu Dropdown Desktop */}
                 {item.hasDropdown && activeMenu === item.name && (

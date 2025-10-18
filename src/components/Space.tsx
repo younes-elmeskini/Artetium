@@ -43,11 +43,11 @@ export default function Space(space: Space) {
           <Image src={space.image} alt={"pc"} height={500} width={400} />
         </div>
       </div>
-      <div className="relative bg-gray-100 md:max-w-2/3 w-full px-1.5 ">
+      <div className="relative bg-gray-100 group md:max-w-2/3 w-full px-1.5 ">
         {/* Bouton Swipe Left */}
         <button
           onClick={() => scroll("left")}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white p-2 opacity-0 group-hover:opacity-100  rounded-full shadow-lg transition-all duration-200 hover:scale-110"
           aria-label="Défiler vers la gauche"
         >
           <ChevronLeft className="w-6 h-6 text-gray-700" />
@@ -56,7 +56,7 @@ export default function Space(space: Space) {
         {/* Container des produits */}
         <div
           ref={scrollContainerRef}
-          className="flex overflow-x-auto scrollbar-hide scroll-smooth py-1.5 snap-x snap-mandatory"
+          className="flex overflow-x-auto overflow-y-hidden  scrollbar-hide scroll-smooth py-1.5 snap-x snap-mandatory"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
@@ -71,7 +71,7 @@ export default function Space(space: Space) {
         {/* Bouton Swipe Right */}
         <button
           onClick={() => scroll("right")}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white p-2 rounded-full opacity-0 group-hover:opacity-100  shadow-lg transition-all duration-200 hover:scale-110"
           aria-label="Défiler vers la droite"
         >
           <ChevronRight className="w-6 h-6 text-gray-700" />

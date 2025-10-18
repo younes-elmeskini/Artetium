@@ -22,6 +22,7 @@ interface MenuItem {
   image: string;
   name: string;
   hasDropdown: boolean;
+  link?:string
 }
 
 interface MenuColumn {
@@ -38,7 +39,7 @@ interface MenuData {
 }
 
 export const topMenuItems: MenuItem[] = [
-  { image: "", name: "Configurateur PC", hasDropdown: false },
+  { image: "", name: "Configurateur PC", hasDropdown: false , link:"/configurateur-pc"},
   { image: "", name: "Composants", hasDropdown: true },
   { image: "", name: "PC Gamer", hasDropdown: true },
   { image: "", name: "Setup Complet", hasDropdown: false },

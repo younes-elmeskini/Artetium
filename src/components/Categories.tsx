@@ -21,7 +21,7 @@ export default function SectionCategories() {
   };
 
   return (
-    <div className="py-16 bg-white">
+    <div className=" bg-white">
       <div className="max-w-full">
         {/* Header */}
         <div className="md:text-center text-start mx-5">
@@ -76,7 +76,7 @@ export default function SectionCategories() {
 
           <div
             ref={scrollContainerRef}
-            className="flex overflow-x-auto scrollbar-hide scroll-smooth py-6 snap-x snap-mandatory"
+            className="flex overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth py-6 snap-x snap-mandatory"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",

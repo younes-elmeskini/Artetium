@@ -30,13 +30,15 @@ export default function Navbar() {
     >
       <div className="flex items-center justify-between py-2.5 px-4 md:px-16">
         {/* Logo */}
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="text-xl font-bold text-primary cursor-pointer"
-        >
-          LOGO
-        </motion.div>
+        <Link href={"/"}>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="text-xl font-bold text-primary cursor-pointer"
+          >
+            LOGO
+          </motion.div>
+        </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center justify-center gap-5">
