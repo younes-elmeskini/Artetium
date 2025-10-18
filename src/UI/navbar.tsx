@@ -3,13 +3,11 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {menuItems} from "@/lib/constantes"
+import { menuItems } from "@/lib/constantes";
 import Link from "next/link";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
-
 
   const itemVariants = {
     closed: { opacity: 0, x: -20 },
@@ -28,7 +26,7 @@ export default function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="border-b border-primary"
+      className="border-b border-primary relative"
     >
       <div className="flex items-center justify-between py-2.5 px-4 md:px-16">
         {/* Logo */}
@@ -42,7 +40,7 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center justify-center gap-5">
-          {menuItems.map((item, index) => (
+          {menuItems.map((item) => (
             <motion.div
               key={item.label}
               initial={{ opacity: 0, y: -20 }}
@@ -96,12 +94,13 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial="closed"
-            animate="open"
-            exit="closed"
-            className="md:hidden overflow-hidden bg-white border-t border-orange-200"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="flex flex-col gap-6 bg-white absolute top-full left-0 w-full z-10 sm:hidden"
           >
-            <div className="flex flex-col py-4 px-4 gap-4">
+            <div className="flex flex-col px-4 gap-2">
               {menuItems.map((item, index) => (
                 <motion.div
                   key={item.label}

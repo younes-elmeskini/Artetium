@@ -1,9 +1,14 @@
-import { LoadingButton, LoadingCard, LoadingPage } from "@/UI/circularLoader";
-import FilterHero from "@/UI/filterHero";
+import SectionCategories from "@/components/Categories";
+import SectionSpace from "@/components/Space";
+import SectionProduct from "@/components/SectionProduct";
+import SectionSpaces from "@/components/SectionSpaces";
 
 export default function Home() {
   return (
-    <div>
+    <div className="">
+      <SectionCategories />
+      <SectionProduct/>
+      <SectionSpaces />
     </div>
   );
 }

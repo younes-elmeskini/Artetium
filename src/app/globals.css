@@ -40,39 +40,10 @@ body {
   padding: 0;
 }
 
-/* 🧩 Titres */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-sm);
+.button {
+  @apply px-5 py-3 flex justify-center items-center gap-2 bg-primary text-white p-2 rounded-md hover:bg-primary/90 cursor-pointer;
 }
 
-h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-}
-h2 {
-  font-size: 2rem;
-  font-weight: 600;
-}
-h3 {
-  font-size: 1.5rem;
-  font-weight: 500;
-}
 
-/* 📝 Paragraphes et textes */
 
-/* 🔘 Boutons */
-/* button {
-  font-family: var(--font-display);
-  background-color: var(--color-primary);
-  color: white;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-} */
 
-/* button:hover {
-  background-color: var(--color-secondary);
-  transform: scale(1.03);
-} */

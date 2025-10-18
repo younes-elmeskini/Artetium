@@ -18,7 +18,7 @@ const MegaMenu: React.FC = () => {
     initial={{ y: -200 }}
     animate={{ y: 0 }}
     transition={{ duration: 0.5, ease: "easeOut" }}
-     className="w-full bg-white shadow-md sticky top-0  ">
+     className="w-full bg-white shadow-md sticky top-0 z-50 ">
       <div className="max-w-7xl mx-auto px-4">
         {/* Bouton mobile fixe */}
         <button

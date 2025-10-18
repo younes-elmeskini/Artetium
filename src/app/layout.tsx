@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <Navbar />
         <FilterHero/>
-        <main className="min-h-screen">
+        <main className="min-h-screen max-w-[1440px] mx-auto flex flex-col">
           <PageTransition>{children}</PageTransition>
         </main>
         <Footer />
