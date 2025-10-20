@@ -484,8 +484,8 @@ export default function ConfigPage() {
               >
                 <div className="w-[200px] h-[200px] md:w-[300px] md:h-[300px] object-cover">
                   <Image
-                    src={"/images/intercore.jpg"}
-                    alt={"inter"}
+                    src="/images/intercore.png"
+                    alt="inter"
                     height={300}
                     width={300}
                     className="w-full h-full"
@@ -513,8 +513,8 @@ export default function ConfigPage() {
               >
                 <div className="w-[200px] h-[200px] md:w-[300px] md:h-[300px] object-cover">
                   <Image
-                    src={"/images/ryzen.jpg"}
-                    alt={"inter"}
+                    src="/images/ryzen.png"
+                    alt="Ryzen"
                     height={300}
                     width={300}
                     className="w-full h-full"
