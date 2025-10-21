@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @layer theme, base, components, utilities;
 
+
 /* 🎨 Thème global */
 :root {
   --background: #ffffff;
@@ -43,6 +44,7 @@ body {
 .button {
   @apply px-5 py-3 flex justify-center items-center gap-2 bg-primary text-white p-2 rounded-md hover:bg-primary/90 cursor-pointer;
 }
+
 
 
 

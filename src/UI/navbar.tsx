@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { menuItems } from "@/lib/constantes";
 import Link from "next/link";
+import { logout } from "@/action/authActions";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,15 +52,40 @@ export default function Navbar() {
               transition={{ duration: 0.2 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Link
-                href={item.link}
-                className="flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Image src={item.icon} alt={item.alt} width={20} height={20} />
-                <p className="text-sm text-primary font-semibold">
-                  {item.label}
-                </p>
-              </Link>
+              {item.label === "Déconnexion" ? (
+                <button
+                  onClick={async () => {
+                    await logout();
+                    window.location.href = "/auth/login"; // redirection après logout
+                  }}
+                  className="flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Image
+                    src={item.icon}
+                    alt={item.alt}
+                    width={20}
+                    height={20}
+                  />
+                  <p className="text-sm text-primary font-semibold">
+                    {item.label}
+                  </p>
+                </button>
+              ) : (
+                <Link
+                  href={item.link}
+                  className="flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Image
+                    src={item.icon}
+                    alt={item.alt}
+                    width={20}
+                    height={20}
+                  />
+                  <p className="text-sm text-primary font-semibold">
+                    {item.label}
+                  </p>
+                </Link>
+              )}
             </motion.div>
           ))}
         </div>
