@@ -60,6 +60,7 @@ export default function LoginForm() {
             toast.success("Login successful");
             setMessage("Login successful 🎉");
             router.push("/");
+            window.location.reload();
           }
       }
     } catch (error) {

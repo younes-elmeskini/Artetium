@@ -60,7 +60,7 @@ export default function HeroCarousel() {
           {/* Contenu */}
           <div className="relative h-full flex items-center justify-center text-center px-4">
             <div className="max-w-4xl">
-              <h1 className="text-5xl md:text-5xl font-bold text-primary text-shadow-2xs  mb-6 animate-fade-in">
+              <h1 className="text-2xl md:text-5xl font-bold text-primary text-shadow-2xs  mb-6 animate-fade-in">
                 {slide.title}
               </h1>
               <p className="text-xl md:text-2xl text-white mb-8 animate-fade-in">

@@ -1,13 +1,76 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { menuItems } from "@/lib/constantes";
 import Link from "next/link";
 import { logout } from "@/action/authActions";
+import { API_URL } from "@/lib/constantes";
 
 export default function Navbar() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Vérifier l'état d'authentification au chargement
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        console.log("🔍 Vérification de l'authentification...");
+        const response = await fetch(`${API_URL}/check-auth`, {
+          method: "GET",
+          credentials: "include", 
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        console.log("📡 Réponse statut:", response.status);
+        const data = await response.json();
+        console.log("📦 Données reçues:", data);
+        setIsLoggedIn(data.authenticated || false);
+        console.log("✅ État connecté:", data.authenticated || false);
+      } catch (error) {
+        console.error("❌ Erreur lors de la vérification d'authentification:", error);
+        setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  const menuItems = [
+    {
+      icon: "/icons/phone.png",
+      alt: "support",
+      label: "Support",
+      link: "/+212708015107",
+    },
+    {
+      icon: "/icons/panier.png",
+      alt: "panier",
+      label: "Panier",
+      link: "/panier",
+    },
+  ];
+
+  // Ajouter conditionnellement Connexion ou Déconnexion
+  const authMenuItem = isLoggedIn
+    ? {
+        icon: "/icons/logout.png",
+        alt: "deconnexion",
+        label: "Déconnexion",
+        link: "#",
+      }
+    : {
+        icon: "/icons/user.png",
+        alt: "connexion",
+        label: "Connexion",
+        link: "/auth/login",
+      };
+
+  const allMenuItems = [...menuItems, authMenuItem];
+
   const [isOpen, setIsOpen] = useState(false);
 
   const itemVariants = {
@@ -21,6 +84,24 @@ export default function Navbar() {
       },
     }),
   };
+
+  // Afficher un loader pendant la vérification
+  if (isLoading) {
+    return (
+      <nav className="border-b border-primary relative">
+        <div className="flex items-center justify-between py-2.5 px-4 md:px-16">
+          <Link href={"/"}>
+            <div className="text-xl font-bold text-primary cursor-pointer">
+              LOGO
+            </div>
+          </Link>
+          <div className="hidden md:flex items-center justify-center gap-5">
+            <div className="animate-pulse h-6 w-32 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <motion.nav
@@ -43,7 +124,7 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center justify-center gap-5">
-          {menuItems.map((item) => (
+          {allMenuItems.map((item) => (
             <motion.div
               key={item.label}
               initial={{ opacity: 0, y: -20 }}
@@ -56,7 +137,9 @@ export default function Navbar() {
                 <button
                   onClick={async () => {
                     await logout();
-                    window.location.href = "/auth/login"; // redirection après logout
+                    setIsLoggedIn(false);
+                    window.location.href = "/auth/login";
+                    window.location.reload();
                   }}
                   className="flex items-center justify-center gap-2 cursor-pointer"
                 >
@@ -129,7 +212,7 @@ export default function Navbar() {
             className="flex flex-col gap-6 bg-white absolute top-full left-0 w-full z-10 sm:hidden"
           >
             <div className="flex flex-col px-4 gap-2">
-              {menuItems.map((item, index) => (
+              {allMenuItems.map((item, index) => (
                 <motion.div
                   key={item.label}
                   custom={index}
@@ -141,15 +224,38 @@ export default function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-orange-50 transition-colors"
                 >
-                  <Image
-                    src={item.icon}
-                    alt={item.alt}
-                    width={23}
-                    height={23}
-                  />
-                  <p className="text-lg text-primary font-semibold">
-                    {item.label}
-                  </p>
+                  {item.label === "Déconnexion" ? (
+                    <button
+                      onClick={async () => {
+                        await logout();
+                        setIsLoggedIn(false);
+                        window.location.href = "/auth/login";
+                      }}
+                      className="flex items-center gap-3 w-full"
+                    >
+                      <Image
+                        src={item.icon}
+                        alt={item.alt}
+                        width={23}
+                        height={23}
+                      />
+                      <p className="text-lg text-primary font-semibold">
+                        {item.label}
+                      </p>
+                    </button>
+                  ) : (
+                    <Link href={item.link} className="flex items-center gap-3 w-full">
+                      <Image
+                        src={item.icon}
+                        alt={item.alt}
+                        width={23}
+                        height={23}
+                      />
+                      <p className="text-lg text-primary font-semibold">
+                        {item.label}
+                      </p>
+                    </Link>
+                  )}
                 </motion.div>
               ))}
             </div>
