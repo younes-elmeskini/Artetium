@@ -1,7 +1,7 @@
 const isDev = process.env.NEXT_PUBLIC_NODE_ENV === "development";
 export const API_URL = isDev
   ? process.env.NEXT_PUBLIC_API_URL
-  : "https://silicontech.elmeskini.site/api";
+  : "https://silicontech-backend.elmeskini.site";
 
 export const menuItems = [
   {
