@@ -16,7 +16,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   // Pages où la navbar ne doit pas être affichée
-  const hideNavbarPages = ['/auth/login', '/auth/register'];
+  const hideNavbarPages = ["/auth/login", "/auth/register"];
   const shouldHideNavbar = hideNavbarPages.includes(pathname);
 
   // Calculer les liens à afficher AVANT les return conditionnels
@@ -26,7 +26,12 @@ export default function Navbar() {
   );
 
   // Debug temporaire
-  console.log("Navbar - isAuthenticated:", isAuthenticated, "isLoading:", isLoading);
+  console.log(
+    "Navbar - isAuthenticated:",
+    isAuthenticated,
+    "isLoading:",
+    isLoading
+  );
 
   // Si on doit cacher la navbar, ne rien afficher
   if (shouldHideNavbar) {
@@ -52,10 +57,10 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-      
+
       // Déclencher l'événement de changement d'authentification
-      window.dispatchEvent(new CustomEvent('auth-changed'));
-      
+      window.dispatchEvent(new CustomEvent("auth-changed"));
+
       // Rediriger vers la page de connexion
       window.location.href = "/auth/login";
     } catch (error) {
@@ -127,7 +132,7 @@ export default function Navbar() {
             </motion.li>
           ))}
         </motion.ul>
-        
+
         {/* Cart Icon */}
         <Link
           href="/cart"
@@ -190,7 +195,7 @@ export default function Navbar() {
                 </motion.div>
               </motion.li>
             ))}
-            
+
             {/* Bouton de déconnexion dans le menu mobile */}
             {isAuthenticated && (
               <motion.li
@@ -217,6 +222,19 @@ export default function Navbar() {
                 </motion.div>
               </motion.li>
             )}
+            {/* Cart Icon */}
+            <Link
+              href="/cart"
+              onClick={() => setOpen(false)}
+              className="hover:text-[#5937E0] w-6 h-6 relative transition-colors duration-300"
+            >
+              <ShoppingCart className="w-6 h-6 text-gray-700" />
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {getTotalItems()}
+                </span>
+              )}
+            </Link>
           </motion.ul>
         )}
       </AnimatePresence>
