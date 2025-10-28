@@ -54,6 +54,14 @@ export default function AddProductPage() {
     const file = e.target.files?.[0];
     if (!file) return;
   
+    // Check file size (limit to 4MB for Vercel)
+    const maxSize = 4 * 1024 * 1024; // 4MB
+    if (file.size > maxSize) {
+      toast.error("File size too large. Maximum size is 4MB");
+      e.target.value = ""; // Reset input
+      return;
+    }
+  
     setUploading(true);
     const fd = new FormData();
     fd.append("file", file);

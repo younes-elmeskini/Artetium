@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { Verify } from "../utils/utils";
 
+export const runtime = 'nodejs';
+export const maxDuration = 300;
+
 export async function POST(req: NextRequest) {
   try {
     await Verify();
