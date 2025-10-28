@@ -27,6 +27,7 @@ const categories = [
 export default function AddProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     category: "Category_1",
@@ -53,42 +54,69 @@ export default function AddProductPage() {
     const file = e.target.files?.[0];
     if (!file) return;
   
+    setUploading(true);
     const fd = new FormData();
     fd.append("file", file);
   
-    const res = await fetch("/api/upload", {
-      method: "POST",
-      body: fd, // DO NOT set Content-Type manually
-    });
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: fd,
+      });
   
-    const data = await res.json();
-    if (!res.ok) {
-      console.error(data.error);
-      return;
+      const data = await res.json();
+      
+      if (!res.ok) {
+        toast.error(data.error || "Failed to upload image");
+        console.error(data.error);
+        setUploading(false);
+        return;
+      }
+  
+      // Save URL in form state using functional update
+      setFormData((prev) => ({ ...prev, cover: data.url }));
+      toast.success("Image uploaded successfully");
+    } catch (error) {
+      toast.error("Failed to upload image");
+      console.error("Upload error:", error);
+    } finally {
+      setUploading(false);
     }
-  
-    // Save URL in form state
-    setFormData({ ...formData, cover: data.url });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    const body = JSON.stringify(formData);
     
-    const response = await fetch("/api/products", { method: "POST", headers: { "Content-Type": "application/json" }, body: body,
-      credentials: "include",
-    });
-    
-    
-    const data = await response.json();
-    if (!response.ok) {
-      toast.error(data.error || "Failed to create product");
-      setLoading(false);
+    if (!formData.cover) {
+      toast.error("Please upload a product image");
       return;
     }
-    toast.success("Product created successfully!");
-    router.push("/admin/products");
+    
+    setLoading(true);
+    
+    try {
+      const response = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        toast.error(data.error || "Failed to create product");
+        setLoading(false);
+        return;
+      }
+      
+      toast.success("Product created successfully!");
+      router.push("/admin/products");
+    } catch (error) {
+      toast.error("An error occurred while creating the product");
+      console.error("Product creation error:", error);
+      setLoading(false);
+    }
   };
 
   return (
@@ -164,8 +192,15 @@ export default function AddProductPage() {
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100"
+                  disabled={uploading}
+                  className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
+                {uploading && (
+                  <div className="mt-2 text-sm text-cyan-600 flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-cyan-600"></div>
+                    Uploading image...
+                  </div>
+                )}
               </div>
               {formData.cover && (
                 <div className="mt-3">

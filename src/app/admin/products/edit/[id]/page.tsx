@@ -28,6 +28,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const router = useRouter();
   const [productId, setProductId] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
@@ -68,6 +69,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         toast.error((error as Error).message || "Failed to fetch product");
         router.push("/admin/products");
         return;
+      } finally {
+        setFetching(false);
       }
     };
     
@@ -91,18 +94,22 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setUploading(true);
     try {
       const fd = new FormData();
       fd.append("file", file);
 
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
+      
       if (!res.ok) throw new Error(data.error || "Upload failed");
 
       setFormData((prev) => ({ ...prev, cover: data.url }));
-      toast.success("Image uploaded");
+      toast.success("Image uploaded successfully");
     } catch (err: unknown) {
-      toast.error((err as Error).message || "Upload error");
+      toast.error((err as Error).message || "Failed to upload image");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -216,8 +223,15 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100"
+                  disabled={uploading}
+                  className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
+                {uploading && (
+                  <div className="mt-2 text-sm text-cyan-600 flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-cyan-600"></div>
+                    Uploading image...
+                  </div>
+                )}
               </div>
               {formData.cover && (
                 <div className="mt-3">

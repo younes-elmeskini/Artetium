@@ -84,6 +84,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate category enum
+    const validCategories = ["Category_1", "Category_2", "Category_3", "Category_4"];
+    if (!validCategories.includes(category)) {
+      return NextResponse.json(
+        { error: "Invalid category" },
+        { status: 400 }
+      );
+    }
+
     await prisma.products.create({
       data: {
         name,
