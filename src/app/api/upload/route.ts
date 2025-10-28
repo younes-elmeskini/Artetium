@@ -34,10 +34,10 @@ export async function POST(req: NextRequest) {
 
     const urlPath = `/uploads/${filename}`;
     return NextResponse.json({ url: urlPath, name: filename });
-  } catch (error: any) {
-    const message = error?.message || "Upload failed";
-    const status = message.includes("Unauthorized") ? 401 : 500;
-    return NextResponse.json({ error: message }, { status });
+  } catch (error: unknown) {
+    const message = (error as unknown as Error).message || "Upload failed";
+    const status = (error as unknown as Error).message?.includes("Unauthorized") ? 401 : 500;
+    return NextResponse.json({ error: message }, { status: status || 500 });
   }
 }
 

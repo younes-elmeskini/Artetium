@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface ProductFormData {
   name: string;
@@ -39,40 +40,38 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   });
 
   useEffect(() => {
-    const fetchProductId = async () => {
+    const fetchProductData = async () => {
       const resolvedParams = await params;
-      setProductId(resolvedParams.id);
-      await fetchProduct(resolvedParams.id);
+      const id = resolvedParams.id;
+      setProductId(id);
+      
+      try {
+        const response = await fetch(`/api/products/${id}`);
+        const product = await response.json();
+
+        if (!response.ok) {
+          throw new Error(product.error || "Failed to fetch product");
+        }
+
+        setFormData({
+          name: product.name || "",
+          category: product.category || "Category_1",
+          cover: product.cover || "",
+          description: product.description || "",
+          price: product.price || "",
+          solde: product.solde || false,
+          BestSeller: product.BestSeller || false,
+        });
+      } catch (error: unknown) {
+        toast.error((error as Error).message || "Failed to fetch product");
+        router.push("/admin/products");
+      } finally {
+        setFetching(false);
+      }
     };
 
-    fetchProductId();
-  }, [params]);
-
-  const fetchProduct = async (id: string) => {
-    try {
-      const response = await fetch(`/api/products/${id}`);
-      const product = await response.json();
-
-      if (!response.ok) {
-        throw new Error(product.error || "Failed to fetch product");
-      }
-
-      setFormData({
-        name: product.name || "",
-        category: product.category || "Category_1",
-        cover: product.cover || "",
-        description: product.description || "",
-        price: product.price || "",
-        solde: product.solde || false,
-        BestSeller: product.BestSeller || false,
-      });
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch product");
-      router.push("/admin/products");
-    } finally {
-      setFetching(false);
-    }
-  };
+    fetchProductData();
+  }, [params, router]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -101,8 +100,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
       setFormData((prev) => ({ ...prev, cover: data.url }));
       toast.success("Image uploaded");
-    } catch (err: any) {
-      toast.error(err.message || "Upload error");
+    } catch (err: unknown) {
+      toast.error((err as Error).message || "Upload error");
     }
   };
 
@@ -125,8 +124,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
       toast.success("Product updated successfully!");
       router.push("/admin/products");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to update product");
+    } catch (error: unknown) {
+      toast.error((error as Error).message || "Failed to update product");
     } finally {
       setLoading(false);
     }
@@ -221,7 +220,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               </div>
               {formData.cover && (
                 <div className="mt-3">
-                  <img
+                  <Image
+                    width={128}
+                    height={128}
                     src={formData.cover}
                     alt="Preview"
                     className="w-32 h-32 object-cover rounded-lg border border-gray-300"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import CardProduct from "@/components/CardProduct";
 import FilterHero from "@/UI/filterHero";
 import { Loader2 } from "lucide-react";
@@ -24,7 +24,7 @@ export default function CatalogurPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -42,16 +42,16 @@ export default function CatalogurPage() {
 
       setProducts(data.products);
       setTotalPages(data.pagination?.totalPages || 1);
-    } catch (error: any) {
-      console.error("Error fetching products:", error);
+    } catch (error: unknown) {
+      console.error("Error fetching products:", (error as Error).message || "Failed to fetch products");
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, categoryFilter, searchTerm]);
 
   useEffect(() => {
     fetchProducts();
-  }, [page, categoryFilter, searchTerm]);
+  }, [fetchProducts]);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);

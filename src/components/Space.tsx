@@ -1,6 +1,6 @@
 "use client";
 import CardProduct from "@/components/CardProduct";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
 type Space = {
@@ -24,11 +24,7 @@ export default function Space(space: Space) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       // Determine filter based on title
@@ -58,12 +54,16 @@ export default function Space(space: Space) {
         
         setProducts(filteredProducts.slice(0, 10));
       }
-    } catch (error) {
-      console.error("Error fetching products:", error);
+    } catch (error: unknown) {
+      console.error("Error fetching products:", (error as Error).message || "Failed to fetch products");
     } finally {
       setLoading(false);
     }
-  };
+  }, [space.title]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {

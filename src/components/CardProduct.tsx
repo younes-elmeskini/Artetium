@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ShoppingCart, Tag } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/lib/hooks/useCartContext";
 import { toast } from "react-hot-toast";
 

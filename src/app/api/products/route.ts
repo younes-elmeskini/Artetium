@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { Verify } from "../utils/utils";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 // GET all products with optional filters
 export async function GET(req: NextRequest) {
@@ -12,7 +13,7 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "20");
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
 
     if (category && category !== "all") {
       where.category = category;
@@ -44,11 +45,11 @@ export async function GET(req: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching products:", error);
     
     // Check if it's a database connection error
-    if (error.code === "P2010" || error.message?.includes("connect")) {
+    if ((error as unknown as PrismaClientKnownRequestError).code === "P2010" || (error as unknown as Error).message?.includes("connect")) {
       return NextResponse.json(
         { 
           error: "Database connection failed. Please check your DATABASE_URL environment variable.",
@@ -59,7 +60,7 @@ export async function GET(req: NextRequest) {
     }
     
     return NextResponse.json(
-      { error: "Failed to fetch products", details: error.message },
+      { error: "Failed to fetch products", details: (error as unknown as Error).message },
       { status: 500 }
     );
   }
@@ -83,7 +84,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const product = await prisma.products.create({
+    await prisma.products.create({
       data: {
         name,
         category,
@@ -95,11 +96,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(product, { status: 201 });
-  } catch (error: any) {
+    return NextResponse.json({ message: "Product created successfully" }, { status: 201 });
+  } catch (error: unknown) {
     console.error("Error creating product:", error);
     
-    if (error.message?.includes("Unauthorized")) {
+    if ((error as unknown as Error).message?.includes("Unauthorized")) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -107,7 +108,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: "Failed to create product" },
+      { error: "Failed to create product", details: (error as unknown as Error).message },
       { status: 500 }
     );
   }

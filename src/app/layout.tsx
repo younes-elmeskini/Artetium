@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "@/UI/navbar";
 import PageTransition from "@/components/animations/PageTransition";
 import Footer from "@/UI/footer";
-import FilterHero from "@/UI/filterHero";
 import { CartProvider } from "@/lib/hooks/useCartContext";
 import { Toaster } from "react-hot-toast";
 

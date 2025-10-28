@@ -1,9 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronDown, Filter, X, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { categories } from "@/lib/constantes";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 
 interface FilterHeroProps {
   onSearch?: (search: string) => void;
@@ -11,10 +10,8 @@ interface FilterHeroProps {
 }
 
 const FilterHero: React.FC<FilterHeroProps> = ({ onSearch, onCategoryChange }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const router = useRouter();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

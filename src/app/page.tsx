@@ -1,5 +1,4 @@
 import Hero from '@/components/Hero';
-import About from '@/components/About';
 import SectionSpaces from '@/components/SectionSpaces';
 import SectionCategories from '@/components/Categories';
 export default function Home() {

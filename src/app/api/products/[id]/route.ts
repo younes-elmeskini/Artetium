@@ -24,10 +24,11 @@ export async function GET(
     }
 
     return NextResponse.json(product);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error fetching product:", error);
+    
     return NextResponse.json(
-      { error: "Failed to fetch product" },
+      { error: "Failed to fetch product", details: (error as unknown as Error).message },
       { status: 500 }
     );
   }
@@ -69,7 +70,7 @@ export async function PUT(
         );
         await unlink(oldImagePath);
         console.log(`Deleted old image: ${existingProduct.cover}`);
-      } catch (err) {
+      } catch (err: unknown) {
         console.error(`Failed to delete old image: ${existingProduct.cover}`, err);
         // Continue with product update even if image deletion fails
       }
@@ -90,10 +91,10 @@ export async function PUT(
     });
 
     return NextResponse.json(product);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating product:", error);
 
-    if (error.message?.includes("Unauthorized")) {
+    if ((error as unknown as Error).message?.includes("Unauthorized")) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -101,7 +102,7 @@ export async function PUT(
     }
 
     return NextResponse.json(
-      { error: "Failed to update product" },
+      { error: "Failed to update product", details: (error as unknown as Error).message },
       { status: 500 }
     );
   }
@@ -140,7 +141,7 @@ export async function DELETE(
         );
         await unlink(imagePath);
         console.log(`Deleted image: ${existingProduct.cover}`);
-      } catch (err) {
+      } catch (err: unknown) {
         console.error(`Failed to delete image: ${existingProduct.cover}`, err);
         // Continue with product deletion even if image deletion fails
       }
@@ -152,10 +153,10 @@ export async function DELETE(
     });
 
     return NextResponse.json({ message: "Product deleted successfully" });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting product:", error);
 
-    if (error.message?.includes("Unauthorized")) {
+    if ((error as unknown as Error).message?.includes("Unauthorized")) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -163,7 +164,7 @@ export async function DELETE(
     }
 
     return NextResponse.json(
-      { error: "Failed to delete product" },
+      { error: "Failed to delete product", details: (error as unknown as Error).message },
       { status: 500 }
     );
   }

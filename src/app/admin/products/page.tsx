@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Plus, Edit, Trash2, ArrowLeft } from "lucide-react";
-
+import Image from "next/image";
 interface Product {
   id: string;
   name: string;
@@ -24,11 +24,7 @@ export default function AdminProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
 
-  useEffect(() => {
-    fetchProducts();
-  }, [searchTerm, categoryFilter]);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -43,12 +39,16 @@ export default function AdminProductsPage() {
       }
 
       setProducts(data.products);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch products");
+    } catch (error: unknown) {
+      toast.error((error as Error).message || "Failed to fetch products");
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchTerm, categoryFilter]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) {
@@ -68,8 +68,8 @@ export default function AdminProductsPage() {
 
       toast.success("Product deleted successfully!");
       fetchProducts();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to delete product");
+    } catch (error: unknown) {
+      toast.error((error as Error).message || "Failed to delete product");
     }
   };
 
@@ -184,7 +184,9 @@ export default function AdminProductsPage() {
                   products.map((product) => (
                     <tr key={product.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <img
+                        <Image
+                          width={64}
+                          height={64}
                           src={product.cover}
                           alt={product.name}
                           className="w-16 h-16 object-cover rounded-lg"

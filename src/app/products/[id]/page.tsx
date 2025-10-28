@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowLeft, ShoppingCart, Tag, Star, Heart } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Tag, Star } from "lucide-react";
 import { toast } from "react-hot-toast";
-
+import { useCart } from "@/lib/hooks/useCartContext";
 interface Product {
   id: string;
   name: string;
@@ -25,13 +25,11 @@ export default function ProductDetailsPage({
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [productId, setProductId] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<string>("");
-
+  const { addToCart } = useCart();
   useEffect(() => {
     const fetchProductId = async () => {
       const resolvedParams = await params;
-      setProductId(resolvedParams.id);
       await fetchProduct(resolvedParams.id);
     };
 
@@ -50,8 +48,8 @@ export default function ProductDetailsPage({
 
       setProduct(data);
       setSelectedImage(data.cover);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch product");
+    } catch (error: unknown) {
+      toast.error((error as unknown as Error).message || "Failed to fetch product");
       router.push("/catalogue");
     } finally {
       setLoading(false);
@@ -60,7 +58,17 @@ export default function ProductDetailsPage({
 
   const handleAddToCart = () => {
     // TODO: Implement add to cart functionality
+    if (!product) return;
     toast.success("Product added to cart!");
+    addToCart({
+      id: product.id,
+      name: product.name,
+      category: product.category,
+      cover: product.cover,
+      description: product.description,
+      price: product.price,
+    });
+    router.push("/cart");
   };
 
   if (loading) {
@@ -190,11 +198,6 @@ export default function ProductDetailsPage({
                 >
                   <ShoppingCart />
                   Add to Cart
-                </button>
-
-                <button className="w-full flex items-center justify-center gap-2 border-2 border-gray-300 text-gray-700 font-semibold py-4 rounded-lg hover:border-gray-400 transition-colors">
-                  <Heart />
-                  Add to Wishlist
                 </button>
               </div>
 
