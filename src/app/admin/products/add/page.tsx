@@ -49,50 +49,46 @@ export default function AddProductPage() {
   const handleCheckboxChange = (name: string, checked: boolean) => {
     setFormData((prev) => ({ ...prev, [name]: checked }));
   };
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-
-      setFormData((prev) => ({ ...prev, cover: data.url }));
-      toast.success("Image uploaded");
-    } catch (err: unknown) {
-      toast.error((err as Error).message || "Upload error");
+  
+    const fd = new FormData();
+    fd.append("file", file);
+  
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: fd, // DO NOT set Content-Type manually
+    });
+  
+    const data = await res.json();
+    if (!res.ok) {
+      console.error(data.error);
+      return;
     }
+  
+    // Save URL in form state
+    setFormData({ ...formData, cover: data.url });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
-    try {
-      const response = await fetch("/api/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to create product");
-      }
-
-      toast.success("Product created successfully!");
-      router.push("/admin/products");
-    } catch (error: unknown) {
-      toast.error((error as Error).message || "Failed to create product");
-    } finally {
+    const body = JSON.stringify(formData);
+    
+    const response = await fetch("/api/products", { method: "POST", headers: { "Content-Type": "application/json" }, body: body,
+      credentials: "include",
+    });
+    
+    
+    const data = await response.json();
+    if (!response.ok) {
+      toast.error(data.error || "Failed to create product");
       setLoading(false);
+      return;
     }
+    toast.success("Product created successfully!");
+    router.push("/admin/products");
   };
 
   return (

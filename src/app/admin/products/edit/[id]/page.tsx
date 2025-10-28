@@ -50,7 +50,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         const product = await response.json();
 
         if (!response.ok) {
-          throw new Error(product.error || "Failed to fetch product");
+          toast.error(product.error || "Failed to fetch product");
+          router.push("/admin/products");
+          return;
         }
 
         setFormData({
@@ -65,11 +67,10 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       } catch (error: unknown) {
         toast.error((error as Error).message || "Failed to fetch product");
         router.push("/admin/products");
-      } finally {
-        setFetching(false);
+        return;
       }
     };
-
+    
     fetchProductData();
   }, [params, router]);
 

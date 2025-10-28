@@ -39,23 +39,15 @@ export default function ProductDetailsPage({
   }, [params]);
 
   const fetchProduct = async (id: string) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/products/${id}`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch product");
-      }
-
-      setProduct(data);
-      setSelectedImage(data.cover);
-    } catch (error: unknown) {
-      toast.error((error as unknown as Error).message || "Failed to fetch product");
+    const response = await fetch(`/api/products/${id}`);
+    const data = await response.json();
+    if (!response.ok) {
+      toast.error(data.error || "Failed to fetch product");
       router.push("/catalogue");
-    } finally {
-      setLoading(false);
+      return;
     }
+    setProduct(data);
+    setSelectedImage(data.cover);
   };
 
   const handleAddToCart = () => {
