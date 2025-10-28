@@ -96,7 +96,7 @@ export default function SectionCategories() {
                   ease: "easeOut",
                 }}
               >
-                <div className="flex flex-col justify-center items-center ml-8">
+                <div className="flex flex-col justify-center items-center ml-14">
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -104,12 +104,12 @@ export default function SectionCategories() {
                     <Image
                       src={category.image}
                       alt={category.name || "Category"}
-                      width={250}
-                      height={250}
-                      className="rounded-full bg-[#e7ebee] w-[150px] h-[150px] md:w-[250px] md:h-[250px]"
+                      width={350}
+                      height={350}
+                      className="rounded-full bg-[#e7ebee] w-[250px] h-[250px] md:w-[350px] md:h-[350px] object-cover"
                     />
                   </motion.div>
-                  <p className="mt-3 text-center font-medium text-gray-800">
+                  <p className="mt-3 text-center font-medium md:text-xl text-gray-800">
                     {category.name}
                   </p>
                 </div>

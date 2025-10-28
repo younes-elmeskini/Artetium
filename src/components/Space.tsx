@@ -7,9 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type Space = {
   title: string;
-  description: string;
   link: string;
-  image: string;
 };
 
 export default function Space(space: Space) {
@@ -29,20 +27,16 @@ export default function Space(space: Space) {
     }
   };
   return (
-    <div className="md:flex md:mx-20 mx-5 ">
-      <div className="bg-gray-100 pt-5 px-5 flex flex-col justify-between md:max-w-1/3 w-full">
-        <div className="space-y-2.5">
+    <div className="md:flex flex-col justify-center items-center  md:mx-20 mx-5  bg-gray-100">
+      <div className="bg-gray-100 p-6 flex flex-col  justify-between w-full">
+        <div className=" flex justify-between items-center">
           <h2 className="font-bold text-2xl text-gray-700">{space.title}</h2>
-          <p className="text-lg text-gray-600">{space.description}</p>
-          <button  className="px-5 py-3 button">
+          <button  className="px-5 py-3 rounded-md text-white bg-black">
             Voir plus
           </button>
         </div>
-        <div className="flex justify-end">
-          <Image src={space.image} alt={"pc"} height={500} width={400} />
-        </div>
       </div>
-      <div className="relative bg-gray-100 group md:max-w-2/3 w-full px-1.5 ">
+      <div className="relative bg-gray-100 group w-full px-1.5 ">
         {/* Bouton Swipe Left */}
         <button
           onClick={() => scroll("left")}

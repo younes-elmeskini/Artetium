@@ -63,7 +63,7 @@ export default function CardProduct({
 
       <motion.button
         whileTap={{ scale: 0.95 }}
-        className="flex justify-center items-center gap-2 bg-primary text-white p-2 rounded-md hover:bg-primary/90 cursor-pointer"
+        className="flex justify-center items-center gap-2 bg-black text-white p-2 rounded-md hover:bg-primary/90 cursor-pointer"
       >
         <ShoppingCart />
         <p className="font-medium">Ajouter au panier</p>

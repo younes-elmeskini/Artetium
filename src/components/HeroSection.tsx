@@ -58,15 +58,15 @@ export default function HeroCarousel() {
           </div>
 
           {/* Contenu */}
-          <div className="relative h-full flex items-center justify-center text-center px-4">
-            <div className="max-w-4xl">
+          <div className="relative h-full flex items-center w-full justify-center text-center ">
+            <div className="w-full">
               <h1 className="text-2xl md:text-5xl font-bold text-primary text-shadow-2xs  mb-6 animate-fade-in">
                 {slide.title}
               </h1>
-              <p className="text-xl md:text-2xl text-white mb-8 animate-fade-in">
+              <p className="text-xs md:text-2xl text-white mb-8 animate-fade-in">
                 {slide.subtitle}
               </p>
-              <button className="bg-primary text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-secondary transition-all transform hover:scale-105">
+              <button className="bg-primary text-white md:px-8 md:py-4 px-3 py-4 rounded-full font-semibold text-xs md:text-lg hover:bg-secondary transition-all transform hover:scale-105">
                 En savoir plus
               </button>
             </div>

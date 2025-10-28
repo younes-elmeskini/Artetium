@@ -2,49 +2,19 @@
 @layer theme, base, components, utilities;
 
 
-/* 🎨 Thème global */
-:root {
-  --background: #ffffff;
-  --foreground: #000000;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 }
-
-@theme {
-  /* 🌈 Couleurs principales */
-  --color-primary: #d92c01;
-  --color-secondary: #f69d0a;
-  --color-text: #1a1a1a;
-  --color-muted: #666666;
-
-  /* 🔠 Polices */
-  --font-display: "Satoshi", sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-
-  /* 📏 Breakpoints */
-  --breakpoint-3xl: 1920px;
-
-  /* 🧱 Espacements par défaut */
-  --spacing-xs: 0.5rem;  /* 8px */
-  --spacing-sm: 1rem;    /* 16px */
-  --spacing-md: 1.5rem;  /* 24px */
-  --spacing-lg: 2rem;    /* 32px */
-  --spacing-xl: 3rem;    /* 48px */
+@layer components {
+  .btn-primary {
+    @apply bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg;
+  }
+  .section-title {
+    @apply text-4xl font-bold text-center mb-12 text-gray-800;
+  }
 }
-
-/* 🧍‍♂️ Styles de base du body */
-body {
-  background: var(--background);
-  color: var(--color-text);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
-}
-
-.button {
-  @apply px-5 py-3 flex justify-center items-center gap-2 bg-primary text-white p-2 rounded-md hover:bg-primary/90 cursor-pointer;
-}
-
 
 
 

@@ -29,11 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased ` }
       >
         <Navbar />
-        <FilterHero/>
-        <main className="min-h-screen max-w-[1440px] mx-auto flex flex-col">
+
+        <main className="min-h-screen mx-auto flex flex-col mb-6">
           <PageTransition>{children}</PageTransition>
         </main>
         <Footer />
