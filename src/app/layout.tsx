@@ -5,6 +5,8 @@ import Navbar from "@/UI/navbar";
 import PageTransition from "@/components/animations/PageTransition";
 import Footer from "@/UI/footer";
 import FilterHero from "@/UI/filterHero";
+import { CartProvider } from "@/lib/hooks/useCartContext";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,12 +33,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased ` }
       >
-        <Navbar />
+        <CartProvider>
+          <Navbar />
 
-        <main className="min-h-screen mx-auto flex flex-col mb-6">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer />
+          <main className="min-h-screen mx-auto flex flex-col mb-6">
+            <PageTransition>{children}</PageTransition>
+          </main>
+          <Footer />
+          <Toaster position="top-right" />
+        </CartProvider>
       </body>
     </html>
   );

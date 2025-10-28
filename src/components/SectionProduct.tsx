@@ -1,15 +1,50 @@
 "use client";
 import CardProduct from "@/components/CardProduct";
-import { products } from "@/lib/constantes";
-import React, { useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useRef, useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  cover: string;
+  description: string;
+  price: string;
+  solde: boolean;
+  BestSeller: boolean;
+}
 
 export default function SectionProduct() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams();
+      params.append("limit", "10");
+      
+      const response = await fetch(`/api/products?${params.toString()}`);
+      const data = await response.json();
+
+      if (response.ok && data.products) {
+        setProducts(data.products.slice(0, 10));
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 290; // Ajustez selon la largeur de vos cartes
+      const scrollAmount = 290;
       const newScrollPosition =
         scrollContainerRef.current.scrollLeft +
         (direction === "left" ? -scrollAmount : scrollAmount);
@@ -47,9 +82,19 @@ export default function SectionProduct() {
             WebkitOverflowScrolling: "touch",
           }}
         >
-          {products.map((product) => (
-            <CardProduct key={product.id} {...product} />
-          ))}
+          {loading ? (
+            <div className="flex items-center justify-center w-full h-64">
+              <Loader2 className="w-8 h-8 animate-spin text-cyan-600" />
+            </div>
+          ) : products.length === 0 ? (
+            <div className="flex items-center justify-center w-full h-64 text-gray-500">
+              No products available
+            </div>
+          ) : (
+            products.map((product) => (
+              <CardProduct key={product.id} {...product} />
+            ))
+          )}
         </div>
 
         {/* Bouton Swipe Right */}

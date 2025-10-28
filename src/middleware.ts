@@ -7,6 +7,7 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isLoginPage = pathname === "/auth/login";
+  const isAdminRoute = pathname.startsWith("/admin");
 
   // ✅ Si l'utilisateur est déjà connecté et essaie d'accéder à /auth/login
   if (token && isLoginPage) {
@@ -15,10 +16,17 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // ✅ Si l'utilisateur essaie d'accéder aux routes admin sans token
+  if (isAdminRoute && !token) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/auth/login";
+    return NextResponse.redirect(url);
+  }
+
   return NextResponse.next();
 }
 
-// ✅ Active le middleware sur toutes les routes ou seulement certaines
+// ✅ Active le middleware sur certaines routes
 export const config = {
-  matcher: ["/auth/login"],
+  matcher: ["/auth/login", "/admin/:path*"],
 };

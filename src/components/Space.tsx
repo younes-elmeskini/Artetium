@@ -1,21 +1,73 @@
 "use client";
 import CardProduct from "@/components/CardProduct";
-import { products } from "@/lib/constantes";
-import Image from "next/image";
-import React, { useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useRef, useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
 type Space = {
   title: string;
   link: string;
 };
 
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  cover: string;
+  description: string;
+  price: string;
+  solde: boolean;
+  BestSeller: boolean;
+}
+
 export default function Space(space: Space) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      // Determine filter based on title
+      let filter = "all";
+      
+      if (space.title.toLowerCase().includes("promotion")) {
+        filter = "solde"; // Fetch products on sale
+      } else if (space.title.toLowerCase().includes("best seller")) {
+        filter = "best"; // Fetch best sellers
+      }
+
+      const params = new URLSearchParams();
+      params.append("limit", "10"); // Limit to 10 products for the carousel
+      
+      const response = await fetch(`/api/products?${params.toString()}`);
+      const data = await response.json();
+
+      if (response.ok && data.products) {
+        let filteredProducts = data.products;
+        
+        // Filter based on space title
+        if (filter === "solde") {
+          filteredProducts = filteredProducts.filter((p: Product) => p.solde);
+        } else if (filter === "best") {
+          filteredProducts = filteredProducts.filter((p: Product) => p.BestSeller);
+        }
+        
+        setProducts(filteredProducts.slice(0, 10));
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 290; // Ajustez selon la largeur de vos cartes
+      const scrollAmount = 290;
       const newScrollPosition =
         scrollContainerRef.current.scrollLeft +
         (direction === "left" ? -scrollAmount : scrollAmount);
@@ -56,9 +108,19 @@ export default function Space(space: Space) {
             WebkitOverflowScrolling: "touch",
           }}
         >
-          {products.map((product) => (
-            <CardProduct key={product.id} {...product} />
-          ))}
+          {loading ? (
+            <div className="flex items-center justify-center w-full h-64">
+              <Loader2 className="w-8 h-8 animate-spin text-cyan-600" />
+            </div>
+          ) : products.length === 0 ? (
+            <div className="flex items-center justify-center w-full h-64 text-gray-500">
+              No products available
+            </div>
+          ) : (
+            products.map((product) => (
+              <CardProduct key={product.id} {...product} />
+            ))
+          )}
         </div>
 
         {/* Bouton Swipe Right */}

@@ -6,11 +6,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { Navlinks } from "@/lib/constantes";
 import { useAuth } from "@/lib/hooks/useAuth";
+import { useCart } from "@/lib/hooks/useCartContext";
 import { usePathname } from "next/navigation";
+import { ShoppingCart } from "lucide-react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { isAuthenticated, isLoading } = useAuth();
+  const { getTotalItems } = useCart();
   const pathname = usePathname();
 
   // Pages où la navbar ne doit pas être affichée
@@ -34,7 +37,7 @@ export default function Navbar() {
   // Si on charge encore l'état d'authentification, afficher une navbar basique
   if (isLoading) {
     return (
-      <div className="text-interface flex justify-between py-4 md:px-[80px] px-4 items-center relative">
+      <div className="text-interface flex justify-between py-4 md:px-[80px] px-4 items-center relative z-50">
         <div className="flex items-center gap-2">
           <h2>LOGO</h2>
         </div>
@@ -61,7 +64,7 @@ export default function Navbar() {
     }
   };
   return (
-    <div className="text-interface flex justify-between py-4 md:px-[80px] px-4 items-center relative ">
+    <div className="text-interface flex justify-between py-4 md:px-[80px] px-4 items-center relative z-100">
       <motion.div
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
@@ -126,6 +129,19 @@ export default function Navbar() {
           ))}
         </motion.ul>
         
+        {/* Cart Icon */}
+        <Link
+          href="/cart"
+          className="relative hidden md:flex items-center justify-center p-2 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          <ShoppingCart className="w-6 h-6 text-gray-700" />
+          {getTotalItems() > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {getTotalItems()}
+            </span>
+          )}
+        </Link>
+
         {/* Bouton de déconnexion pour les utilisateurs connectés */}
         {isAuthenticated && (
           <motion.button
