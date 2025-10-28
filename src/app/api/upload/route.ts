@@ -1,39 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { mkdir, writeFile, stat } from "fs/promises";
-import path from "path";
-import crypto from "crypto";
+import { put } from "@vercel/blob";
 import { Verify } from "../utils/utils";
-
-async function ensureDir(dirPath: string) {
-  try {
-    await stat(dirPath);
-  } catch {
-    await mkdir(dirPath, { recursive: true });
-  }
-}
 
 export async function POST(req: NextRequest) {
   try {
     await Verify();
 
     const formData = await req.formData();
-    const file = formData.get("file");
+    const file = formData.get("file") as File;
 
-    if (!file || !(file instanceof File)) {
+    if (!file) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const ext = path.extname(file.name) || ".png";
-    const filename = `${crypto.randomBytes(16).toString("hex")}${ext}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    const filePath = path.join(uploadDir, filename);
+    // Upload to Vercel Blob Storage
+    const blob = await put(file.name, file, {
+      access: 'public',
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    });
 
-    await ensureDir(uploadDir);
-    await writeFile(filePath, buffer);
-
-    const urlPath = `/uploads/${filename}`;
-    return NextResponse.json({ url: urlPath, name: filename });
+    return NextResponse.json({ url: blob.url, name: blob.pathname });
   } catch (error: unknown) {
     const message = (error as unknown as Error).message || "Upload failed";
     const status = (error as unknown as Error).message?.includes("Unauthorized") ? 401 : 500;
